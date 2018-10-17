@@ -1,13 +1,20 @@
 package com.tank.service;
 
 import com.tank.entity.Person;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Slf4j
+@Component
 public class PersonService {
 
-  public Person findBy(@NonNull final String id) {
-    return new Person().setId(id).setName("lisi").setGender("male");
+  public  Mono<Person> savePerson(Mono<Person> person) {
+    return this.template.save(person);
   }
+
+  @Autowired
+  private ReactiveMongoTemplate template;
 }

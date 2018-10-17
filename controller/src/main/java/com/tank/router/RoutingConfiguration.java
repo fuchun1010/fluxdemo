@@ -24,7 +24,6 @@ public class RoutingConfiguration {
 
     val findPersonWithIdRouter = GET(URL_PREFIX + "/{id}/person").and(JSON_FORMATTER);
     val createPersonRouter = POST(URL_PREFIX + "/person/create").and(JSON_FORMATTER);
-
     return RouterFunctions.
         route(findPersonWithIdRouter, personController::findBy)
         .andRoute(createPersonRouter, personController::create);

@@ -15,6 +15,9 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+
 /**
  * @author fuchun
  */
@@ -27,7 +30,7 @@ public class PersonController {
     val id = request.pathVariable("id");
     val service = new PersonService();
     try {
-      val person = service.findBy(id);
+      val person = new Person().setGender("male");
       return this.responseWrapper.<Person>responseData(person);
     } catch (Exception ex) {
       val errors = new HashMap<String, String>(8);
@@ -39,18 +42,21 @@ public class PersonController {
   @CrossOrigin
   public Mono<ServerResponse> create(ServerRequest request) {
 
-    request.bodyToMono(Person.class).doOnNext(person -> {
-      System.out.println("create person here");
-      System.out.println(person.getGender());
-    }).doOnError(err -> {
-      log.error("error", err.getLocalizedMessage());
-    }).toFuture().join();
 
-    System.out.println("end create person");
-    return this.responseWrapper.created();
+    return this.personService
+        .savePerson(request.bodyToMono(Person.class))
+        .flatMap(p -> {
+          Map<String, String> resp = new HashMap<>(8);
+          resp.put("id", p.getId());
+          return ok().body(Mono.just(resp), Map.class).switchIfEmpty(noContent().build());
+        }).doOnError(err -> log.error(err.getLocalizedMessage()));
   }
 
   @Autowired
   private ResponseWrapper responseWrapper;
+
+  @Autowired
+  private PersonService personService;
+
 
 }

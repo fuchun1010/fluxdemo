@@ -3,17 +3,20 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.tank</groupId>
-        <artifactId>fluxdemo</artifactId>
-        <version>1.0</version>
-    </parent>
+
     <groupId>com.tank</groupId>
     <artifactId>service</artifactId>
     <version>1.0</version>
     <name>service</name>
     <packaging>jar</packaging>
     <url>http://maven.apache.org</url>
+
+    <parent>
+        <groupId>com.tank</groupId>
+        <artifactId>fluxdemo</artifactId>
+        <version>1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <dependencies>
         <dependency>
@@ -27,4 +30,5 @@
             <version>${slf4j-api-version}</version>
         </dependency>
     </dependencies>
+
 </project>
