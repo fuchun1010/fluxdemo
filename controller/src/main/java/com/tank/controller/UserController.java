@@ -10,8 +10,10 @@ import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 
+import static com.tank.constants.UrlPrefix.URL_PREFIX;
+
 @RestController
-@RequestMapping("/v1/flux")
+@RequestMapping(URL_PREFIX)
 @CrossOrigin
 public class UserController {
 
