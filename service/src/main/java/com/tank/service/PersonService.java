@@ -11,8 +11,12 @@ import reactor.core.publisher.Mono;
 @Component
 public class PersonService {
 
-  public  Mono<Person> savePerson(Mono<Person> person) {
+  public Mono<Person> savePerson(Mono<Person> person) {
     return this.template.save(person);
+  }
+
+  public Mono<Person> findBy(final String id) {
+    return this.template.findById(id, Person.class);
   }
 
   @Autowired

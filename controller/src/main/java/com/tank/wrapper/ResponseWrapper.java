@@ -6,12 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
-
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 /**
  * @param <T>
@@ -20,15 +15,11 @@ import static org.springframework.web.reactive.function.BodyInserters.fromObject
 @Component
 public class ResponseWrapper<T> {
 
-  public Mono<ServerResponse> responseData(@NonNull final T body) {
-    return ServerResponse.ok().contentType(APPLICATION_JSON_UTF8).body(fromObject(body));
-  }
 
-  public Mono<ServerResponse> responseErrorWithMessage(final Map<String, String> errors) {
-    return ServerResponse
-        .status(INTERNAL_SERVER_ERROR)
-        .contentType(APPLICATION_JSON_UTF8)
-        .body(fromObject(errors));
+  public Mono<ServerResponse> responseData(@NonNull final T body, Class<T> clazz) {
+    return ServerResponse.ok()
+        .body(Mono.just(body), clazz)
+        .switchIfEmpty(ServerResponse.noContent().build());
   }
 
   public Mono<ServerResponse> created() {

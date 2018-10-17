@@ -4,7 +4,6 @@ import com.tank.entity.Person;
 import com.tank.service.PersonService;
 import com.tank.wrapper.ResponseWrapper;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,9 +14,6 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
-
 /**
  * @author fuchun
  */
@@ -27,28 +23,20 @@ public class PersonController {
 
   @CrossOrigin
   public Mono<ServerResponse> findBy(ServerRequest request) {
-    val id = request.pathVariable("id");
-    val service = new PersonService();
-    try {
-      val person = new Person().setGender("male");
-      return this.responseWrapper.<Person>responseData(person);
-    } catch (Exception ex) {
-      val errors = new HashMap<String, String>(8);
-      errors.putIfAbsent("error", ex.getLocalizedMessage());
-      return this.responseWrapper.<Map>responseErrorWithMessage(errors);
-    }
+    return this.personService.findBy(request.pathVariable("id"))
+        .flatMap(p -> this.responseWrapper.responseData(p, Person.class));
   }
 
   @CrossOrigin
   public Mono<ServerResponse> create(ServerRequest request) {
-
 
     return this.personService
         .savePerson(request.bodyToMono(Person.class))
         .flatMap(p -> {
           Map<String, String> resp = new HashMap<>(8);
           resp.put("id", p.getId());
-          return ok().body(Mono.just(resp), Map.class).switchIfEmpty(noContent().build());
+          Mono<ServerResponse> response = this.responseWrapper.<Map<String, String>>responseData(resp, Map.class);
+          return response;
         }).doOnError(err -> log.error(err.getLocalizedMessage()));
   }
 
