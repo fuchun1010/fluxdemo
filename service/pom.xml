@@ -12,6 +12,7 @@
     <artifactId>service</artifactId>
     <version>1.0</version>
     <name>service</name>
+    <packaging>jar</packaging>
     <url>http://maven.apache.org</url>
 
     <dependencies>
