@@ -13,8 +13,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static com.tank.constants.UrlPrefix.URL_PREFIX;
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 
 @Configuration
 @EnableWebFlux
@@ -24,8 +23,11 @@ public class RoutingConfiguration {
   public RouterFunction<ServerResponse> personRouter() {
 
     val findPersonWithIdRouter = GET(URL_PREFIX + "/{id}/person").and(JSON_FORMATTER);
+    val createPersonRouter = POST(URL_PREFIX + "/person/create").and(JSON_FORMATTER);
 
-    return RouterFunctions.route(findPersonWithIdRouter, personController::findBy);
+    return RouterFunctions.
+        route(findPersonWithIdRouter, personController::findBy)
+        .andRoute(createPersonRouter, personController::create);
   }
 
   private final RequestPredicate JSON_FORMATTER = accept(MediaType.APPLICATION_JSON_UTF8);

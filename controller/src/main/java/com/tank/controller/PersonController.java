@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author fuchun
@@ -27,15 +28,29 @@ public class PersonController {
     val service = new PersonService();
     try {
       val person = service.findBy(id);
-      return this.responseWrapper.responseData(person);
+      return this.responseWrapper.<Person>responseData(person);
     } catch (Exception ex) {
       val errors = new HashMap<String, String>(8);
       errors.putIfAbsent("error", ex.getLocalizedMessage());
-      return this.responseWrapper.responseErrorWithMessage(errors);
+      return this.responseWrapper.<Map>responseErrorWithMessage(errors);
     }
   }
 
+  @CrossOrigin
+  public Mono<ServerResponse> create(ServerRequest request) {
+
+    request.bodyToMono(Person.class).doOnNext(person -> {
+      System.out.println("create person here");
+      System.out.println(person.getGender());
+    }).doOnError(err -> {
+      log.error("error", err.getLocalizedMessage());
+    }).toFuture().join();
+
+    System.out.println("end create person");
+    return this.responseWrapper.created();
+  }
+
   @Autowired
-  private ResponseWrapper<Person> responseWrapper;
+  private ResponseWrapper responseWrapper;
 
 }

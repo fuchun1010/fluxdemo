@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
@@ -28,5 +29,9 @@ public class ResponseWrapper<T> {
         .status(INTERNAL_SERVER_ERROR)
         .contentType(APPLICATION_JSON_UTF8)
         .body(fromObject(errors));
+  }
+
+  public Mono<ServerResponse> created() {
+    return ServerResponse.status(CREATED).build();
   }
 }
