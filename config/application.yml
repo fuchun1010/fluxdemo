@@ -7,3 +7,15 @@ spring:
       host: 127.0.0.1
       port: 28017
       database: flux
+  jdbc:
+    maxThreadPool: 8
+    corePoolSize: 1
+    keepAliveTime: 0
+    maxWaiting: 1024
+    presto:
+      url: jdbc:presto://localhost:8088/mysql/demo
+      username: root
+      password:
+      driver-class-name: com.facebook.presto.jdbc.PrestoDriver
+      validation-query: SELECT 1
+
