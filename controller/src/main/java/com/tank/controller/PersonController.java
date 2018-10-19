@@ -4,6 +4,7 @@ import com.tank.entity.Person;
 import com.tank.service.PersonService;
 import com.tank.wrapper.ResponseWrapper;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -52,6 +53,17 @@ public class PersonController {
           return response;
         })
         .doOnError(err -> log.error(err.getLocalizedMessage()));
+  }
+
+
+  @CrossOrigin
+  public Mono<ServerResponse> update(final ServerRequest request) {
+    val id = request.pathVariable("id");
+    Mono<Person> personMono = this.personService.update(id, request.bodyToMono(Person.class));
+    return personMono.flatMap(p -> {
+      Mono<ServerResponse> response = this.responseWrapper.<Person>responseMono(p, Person.class);
+      return response;
+    }).doOnError(err -> log.error(err.getLocalizedMessage()));
   }
 
   @Autowired
