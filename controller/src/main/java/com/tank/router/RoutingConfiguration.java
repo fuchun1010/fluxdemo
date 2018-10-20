@@ -26,11 +26,13 @@ public class RoutingConfiguration {
     val createPersonRouter = POST(URL_PREFIX + "/person/create").and(JSON_FORMATTER);
     val listPersons = GET(URL_PREFIX + "/persons").and(JSON_FORMATTER);
     val updatePerson = PUT(URL_PREFIX + "/{id}/person").and(JSON_FORMATTER);
+    val userNumRouter = GET(URL_PREFIX + "/users/num").and(JSON_FORMATTER);
     return RouterFunctions.
         route(findPersonWithIdRouter, personController::findBy)
         .andRoute(createPersonRouter, personController::create)
         .andRoute(listPersons, personController::list)
-        .andRoute(updatePerson, personController::update);
+        .andRoute(updatePerson, personController::update)
+        .andRoute(userNumRouter, personController::num);
   }
 
   private final RequestPredicate JSON_FORMATTER = accept(MediaType.APPLICATION_JSON_UTF8);

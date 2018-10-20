@@ -12,7 +12,7 @@ import reactor.core.scheduler.Scheduler;
 public class HouseService {
 
   public Mono<Integer> count() {
-    val sql = "select count(*) as cnt from tab_house ";
+    val sql = "select count(*) as cnt from tab_house";
     return Mono.fromCallable(() -> this.template.queryForObject(sql, Integer.class)).publishOn(this.jdbcScheduler);
   }
 

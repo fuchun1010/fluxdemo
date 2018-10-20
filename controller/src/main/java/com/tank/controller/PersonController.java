@@ -1,6 +1,7 @@
 package com.tank.controller;
 
 import com.tank.entity.Person;
+import com.tank.service.HouseService;
 import com.tank.service.PersonService;
 import com.tank.wrapper.ResponseWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +66,19 @@ public class PersonController {
       return response;
     }).doOnError(err -> log.error(err.getLocalizedMessage()));
   }
+
+
+  public Mono<ServerResponse> num(final ServerRequest request) {
+    return this.houseService.count().flatMap(cnt -> {
+      Map<String, Integer> counter = new HashMap<>(8);
+      counter.putIfAbsent("count", cnt);
+      Mono<ServerResponse> response = this.responseWrapper.<Person>responseMono(counter, Map.class);
+      return response;
+    }).doOnError(err -> log.error(err.getLocalizedMessage()));
+  }
+
+  @Autowired
+  private HouseService houseService;
 
   @Autowired
   private ResponseWrapper responseWrapper;
