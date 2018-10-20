@@ -1,6 +1,6 @@
 package com.tank.router;
 
-import com.tank.controller.PersonController;
+import com.tank.handler.PersonHandler;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,21 +22,22 @@ public class RoutingConfiguration {
   @Bean
   public RouterFunction<ServerResponse> personRouter() {
 
-    val findPersonWithIdRouter = GET(URL_PREFIX + "/{id}/person").and(JSON_FORMATTER);
-    val createPersonRouter = POST(URL_PREFIX + "/person/create").and(JSON_FORMATTER);
-    val listPersons = GET(URL_PREFIX + "/persons").and(JSON_FORMATTER);
-    val updatePerson = PUT(URL_PREFIX + "/{id}/person").and(JSON_FORMATTER);
-    val userNumRouter = GET(URL_PREFIX + "/users/num").and(JSON_FORMATTER);
+    val pattern = URL_PREFIX;
+    val findPersonWithIdRouter = GET(pattern + "/{id}/person").and(JSON_FORMATTER);
+    val createPersonRouter = POST(pattern + "/person/create").and(JSON_FORMATTER);
+    val listPersons = GET(pattern + "/persons").and(JSON_FORMATTER);
+    val updatePerson = PUT(pattern + "/{id}/person").and(JSON_FORMATTER);
+    val userNumRouter = GET(pattern + "/users/num").and(JSON_FORMATTER);
     return RouterFunctions.
-        route(findPersonWithIdRouter, personController::findBy)
-        .andRoute(createPersonRouter, personController::create)
-        .andRoute(listPersons, personController::list)
-        .andRoute(updatePerson, personController::update)
-        .andRoute(userNumRouter, personController::num);
+        route(findPersonWithIdRouter, personHandler::findBy)
+        .andRoute(createPersonRouter, personHandler::create)
+        .andRoute(listPersons, personHandler::list)
+        .andRoute(updatePerson, personHandler::update)
+        .andRoute(userNumRouter, personHandler::num);
   }
 
   private final RequestPredicate JSON_FORMATTER = accept(MediaType.APPLICATION_JSON_UTF8);
 
   @Autowired
-  private PersonController personController;
+  private PersonHandler personHandler;
 }

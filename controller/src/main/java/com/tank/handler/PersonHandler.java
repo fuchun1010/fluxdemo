@@ -1,4 +1,4 @@
-package com.tank.controller;
+package com.tank.handler;
 
 import com.tank.entity.Person;
 import com.tank.service.HouseService;
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class PersonController {
+public class PersonHandler {
 
   @CrossOrigin
   public Mono<ServerResponse> findBy(ServerRequest request) {
