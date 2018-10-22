@@ -13,10 +13,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author fuchun
@@ -67,7 +64,7 @@ public class PersonHandler {
     }).doOnError(err -> log.error(err.getLocalizedMessage()));
   }
 
-
+  @CrossOrigin
   public Mono<ServerResponse> num(final ServerRequest request) {
     return this.houseService.count().flatMap(cnt -> {
       Map<String, Integer> counter = new HashMap<>(8);
@@ -75,6 +72,22 @@ public class PersonHandler {
       Mono<ServerResponse> response = this.responseWrapper.<Person>responseMono(counter, Map.class);
       return response;
     }).doOnError(err -> log.error(err.getLocalizedMessage()));
+  }
+
+  @CrossOrigin
+  public Mono<ServerResponse> demo(final ServerRequest request) {
+    val str = request.pathVariable("name");
+    val isNotValid = !Objects.isNull(str) && str.trim().length() < 5;
+    Mono<ServerResponse> response = null;
+    if (isNotValid) {
+      val errors = new HashMap<String, String>(8);
+      errors.putIfAbsent("error", "name's length less than 5");
+      response = this.responseWrapper.error(errors);
+    } else {
+      response = this.responseWrapper.created();
+    }
+
+    return response;
   }
 
   @Autowired

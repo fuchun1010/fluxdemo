@@ -28,12 +28,15 @@ public class RoutingConfiguration {
     val listPersons = GET(pattern + "/persons").and(JSON_FORMATTER);
     val updatePerson = PUT(pattern + "/{id}/person").and(JSON_FORMATTER);
     val userNumRouter = GET(pattern + "/users/num").and(JSON_FORMATTER);
+    val userNameRouter = GET(pattern + "/user/{name}").and(JSON_FORMATTER);
+
     return RouterFunctions.
         route(findPersonWithIdRouter, personHandler::findBy)
         .andRoute(createPersonRouter, personHandler::create)
         .andRoute(listPersons, personHandler::list)
         .andRoute(updatePerson, personHandler::update)
-        .andRoute(userNumRouter, personHandler::num);
+        .andRoute(userNumRouter, personHandler::num)
+        .andRoute(userNameRouter, personHandler::demo);
   }
 
   private final RequestPredicate JSON_FORMATTER = accept(MediaType.APPLICATION_JSON_UTF8);

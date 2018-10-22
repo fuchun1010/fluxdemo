@@ -6,7 +6,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * @param <T>
@@ -20,6 +23,10 @@ public class ResponseWrapper<T> {
     return ServerResponse.ok()
         .body(Mono.just(body), clazz)
         .switchIfEmpty(ServerResponse.noContent().build());
+  }
+
+  public Mono<ServerResponse> error(@NonNull final Map<String, String> errors) {
+    return ServerResponse.status(INTERNAL_SERVER_ERROR).body(Mono.just(errors), Map.class);
   }
 
 
