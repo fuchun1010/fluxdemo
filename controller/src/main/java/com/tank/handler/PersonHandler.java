@@ -22,13 +22,11 @@ import java.util.*;
 @Component
 public class PersonHandler {
 
-  @CrossOrigin
   public Mono<ServerResponse> findBy(ServerRequest request) {
     return this.personService.findBy(request.pathVariable("id"))
         .flatMap(p -> this.responseWrapper.responseMono(p, Person.class));
   }
 
-  @CrossOrigin
   public Mono<ServerResponse> create(final ServerRequest request) {
 
     return this.personService
@@ -41,7 +39,6 @@ public class PersonHandler {
         }).doOnError(err -> log.error(err.getLocalizedMessage()));
   }
 
-  @CrossOrigin
   public Mono<ServerResponse> list(final ServerRequest request) {
     return this.personService.list()
         .collectList()
@@ -53,8 +50,6 @@ public class PersonHandler {
         .doOnError(err -> log.error(err.getLocalizedMessage()));
   }
 
-
-  @CrossOrigin
   public Mono<ServerResponse> update(final ServerRequest request) {
     val id = request.pathVariable("id");
     Mono<Person> personMono = this.personService.update(id, request.bodyToMono(Person.class));
@@ -64,8 +59,8 @@ public class PersonHandler {
     }).doOnError(err -> log.error(err.getLocalizedMessage()));
   }
 
-  @CrossOrigin
   public Mono<ServerResponse> num(final ServerRequest request) {
+
     return this.houseService.count().flatMap(cnt -> {
       Map<String, Integer> counter = new HashMap<>(8);
       counter.putIfAbsent("count", cnt);
@@ -74,7 +69,6 @@ public class PersonHandler {
     }).doOnError(err -> log.error(err.getLocalizedMessage()));
   }
 
-  @CrossOrigin
   public Mono<ServerResponse> demo(final ServerRequest request) {
     val str = request.pathVariable("name");
     val isNotValid = !Objects.isNull(str) && str.trim().length() < 5;
